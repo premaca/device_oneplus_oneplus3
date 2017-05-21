@@ -127,6 +127,7 @@ PRODUCT_PACKAGES += \
 
 # Doze
 PRODUCT_PACKAGES += \
+    OneplusThreeDoze \
     OneplusPocketMode
 
 # GPS
