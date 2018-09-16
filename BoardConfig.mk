@@ -31,8 +31,7 @@ TARGET_SPECIFIC_HEADER_PATH := $(PLATFORM_PATH)/include
 BOARD_VENDOR := oneplus
 
 # Assertions
-TARGET_BOARD_INFO_FILE ?= $(PLATFORM_PATH)/board-info.txt
-TARGET_OTA_ASSERT_DEVICE := OnePlus3,oneplus3,OnePlus3T,oneplus3t
+TARGET_OTA_ASSERT_DEVICE := none
 
 # Use Snapdragon LLVM, if available
 TARGET_USE_SDCLANG := true
