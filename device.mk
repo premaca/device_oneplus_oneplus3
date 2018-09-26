@@ -286,13 +286,13 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/qdcm_calib_data_samsung_s6e3fa5_1080p_cmd_mode_dsi_panel.xml:$(TARGET_COPY_OUT_VENDOR)/etc/qdcm_calib_data_samsung_s6e3fa5_1080p_cmd_mode_dsi_panel.xml
 
 # ANT+
-PRODUCT_PACKAGES += \
-    AntHalService \
-    com.dsi.ant.antradio_library \
-    libantradio
+#PRODUCT_PACKAGES += \
+#    AntHalService \
+#    com.dsi.ant.antradio_library \
+#    libantradio
 
-PRODUCT_COPY_FILES += \
-    external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/com.dsi.ant.antradio_library.xml
+#PRODUCT_COPY_FILES += \
+#   external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/com.dsi.ant.antradio_library.xml
 
 # For android_filesystem_config.h
 PRODUCT_PACKAGES += \
