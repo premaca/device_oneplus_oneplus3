@@ -1,6 +1,7 @@
 /*
    Copyright (c) 2016, The CyanogenMod Project
              (c) 2017, The LineageOS Project
+
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
    met:
@@ -13,6 +14,7 @@
     * Neither the name of The Linux Foundation nor the names of its
       contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
+
    THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
    WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
@@ -29,19 +31,15 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <fcntl.h>
-#include <string>
-#include "android-base/logging.h"
+#include <android-base/logging.h>
 #include <android-base/properties.h>
-
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
-#include "vendor_init.h"
 #include "property_service.h"
+#include "vendor_init.h"
 
-using android::base::GetProperty;
 using android::init::property_set;
-using android::init::import_kernel_cmdline;
 
 void property_override(char const prop[], char const value[])
 {
@@ -69,7 +67,7 @@ static int read_file2(const char *fname, char *data, int max_size)
 
     fd = open(fname, O_RDONLY);
     if (fd < 0) {
-        LOG(ERROR) << "failed to open" << fname << "\n";
+        LOG(ERROR) << "failed to open '" << fname << "'";
         return 0;
     }
 
@@ -106,9 +104,9 @@ void init_alarm_boot_properties()
      * 8 -> KPDPWR_N pin toggled (power key pressed)
      */
         if(buf[0] == '3')
-            property_override("ro.alarm_boot", "true");
+            property_set("ro.alarm_boot", "true");
         else
-            property_override("ro.alarm_boot", "false");
+            property_set("ro.alarm_boot", "false");
     }
 }
 
@@ -129,75 +127,45 @@ void load_op3t(const char *model) {
     property_set("ro.power_profile.override", "power_profile_3t");
 }
 
-static void import_panel_prop(const std::string& key, const std::string& value, bool for_emulator) {
-    if (key.empty()) return;
-
-    if (key.compare("mdss_mdp.panel") == 0) {
-        if (value.find("s6e3fa3") != std::string::npos)
-            property_override("ro.product.panel", "samsung_s6e3fa3_1080p");
-        if (value.find("s6e3fa5") != std::string::npos)
-            property_override("ro.product.panel", "samsung_s6e3fa5_1080p");
-    }
-}
-
 void vendor_load_properties() {
-    std::string rf_version = GetProperty("ro.boot.rf_version", "");
+    int rf_version = stoi(android::base::GetProperty("ro.boot.rf_version", ""));
 
-    if (rf_version == "11") {
-        /* China */
+    switch (rf_version) {
+    case 11:
+    case 31:
+        /* China / North America model */
         load_op3("ONEPLUS A3000");
-        property_override("ro.telephony.default_network", "22");
-        property_override("telephony.lteOnCdmaDevice", "1");
-        property_override("persist.vendor.radio.force_on_dc", "true");
-        /*property_override("ro.rf_version", "TD-SCDMA");
-        property_override("ro.build.display.full_id", "ONEPLUS A3000");
-        property_override("ro.build.display.id", "ONEPLUS A3000");*/
-    } else if (rf_version == "21") {
+        property_set("ro.telephony.default_network", "22");
+        property_set("telephony.lteOnCdmaDevice", "1");
+        property_set("persist.radio.force_on_dc", "true");
+        break;
+    case 21:
         /* Europe / Asia model */
         load_op3("ONEPLUS A3003");
-        property_override("ro.telephony.default_network", "9");
-        /*property_override("ro.rf_version", "TDD_FDD_Eu");
-        property_override("ro.build.display.full_id", "ONEPLUS A3003");
-        property_override("ro.build.display.id", "ONEPLUS A3003");*/
-    } else if (rf_version == "31") {
-        /* Americas */
-        load_op3("ONEPLUS A3000");
-        property_override("ro.telephony.default_network", "22");
-        property_override("telephony.lteOnCdmaDevice", "1");
-        property_override("persist.vendor.radio.force_on_dc", "true");
-        /*property_override("ro.rf_version", "TDD_FDD_Am");
-        property_override("ro.build.display.full_id", "ONEPLUS A3000");
-        property_override("ro.build.display.id", "ONEPLUS A3000");*/
-    } else if (rf_version == "12") {
+        property_set("ro.telephony.default_network", "9");
+        break;
+    case 12:
         /* China model */
         load_op3t("ONEPLUS A3010");
-        property_override("ro.telephony.default_network", "22");
-        property_override("telephony.lteOnCdmaDevice", "1");
-        property_override("persist.vendor.radio.force_on_dc", "true");
-        /*property_override("ro.rf_version", "TD-SCDMA");
-        property_override("ro.build.display.full_id", "ONEPLUS A3010");
-        property_override("ro.build.display.id", "ONEPLUS A3010");*/
-    } else if (rf_version == "22") {
+        property_set("ro.telephony.default_network", "22");
+        property_set("telephony.lteOnCdmaDevice", "1");
+        property_set("persist.radio.force_on_dc", "true");
+        break;
+    case 22:
         /* Europe / Asia model */
         load_op3t("ONEPLUS A3003");
-        property_override("ro.telephony.default_network", "9");
-        /*property_override("ro.rf_version", "TDD_FDD_Eu");
-        property_override("ro.build.display.full_id", "ONEPLUS A3003");
-        property_override("ro.build.display.id", "ONEPLUS A3003");*/
-    } else if (rf_version == "32") {
+        property_set("ro.telephony.default_network", "9");
+        break;
+    case 32:
         /* North America model */
         load_op3t("ONEPLUS A3000");
-        property_override("ro.telephony.default_network", "22");
-        property_override("telephony.lteOnCdmaDevice", "1");
-        property_override("persist.vendor.radio.force_on_dc", "true");
-        /*property_override("ro.rf_version", "TDD_FDD_Am");
-        property_override("ro.build.display.full_id", "ONEPLUS A3000");
-        property_override("ro.build.display.id", "ONEPLUS A3000");*/
-    } else {
-        LOG(INFO) << __func__ << "unexcepted rf version!\n";
+        property_set("ro.telephony.default_network", "22");
+        property_set("telephony.lteOnCdmaDevice", "1");
+        property_set("persist.radio.force_on_dc", "true");
+        break;
+    default:
+        LOG(ERROR) << __func__ << ": unexcepted rf version!";
     }
 
     init_alarm_boot_properties();
-
-    import_kernel_cmdline(false, import_panel_prop);
 }
