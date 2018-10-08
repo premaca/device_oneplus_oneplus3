@@ -272,12 +272,12 @@ PRODUCT_COPY_FILES += \
 
 # Wifi
 PRODUCT_PACKAGES += \
+    hostapd \
     ipacm \
     IPACM_cfg.xml \
     libqsap_sdk \
     libQWiFiSoftApCfg \
     libwpa_client \
-    hostapd \
     wificond \
     wifilogd \
     wpa_supplicant \
