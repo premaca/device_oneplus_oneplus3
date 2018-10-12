@@ -50,9 +50,10 @@ PRODUCT_PACKAGES += \
 
 # Healthd
 PRODUCT_PACKAGES += \
-    android.hardware.health@2.0-impl \
-    android.hardware.health@2.0-convert \
-    android.hardware.health@2.0-service
+    android.hardware.health@2.0-service.oneplus3
+
+DEVICE_FRAMEWORK_MANIFEST_FILE += \
+    system/libhidl/vintfdata/manifest_healthd_exclude.xml
 
 # HIDL
 PRODUCT_PACKAGES += \

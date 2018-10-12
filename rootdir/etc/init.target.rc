@@ -549,6 +549,9 @@ service dashd /sbin/dashd
     group root system
     writepid /dev/cpuset/system-background/tasks
 
+on property:init.svc.health-hal-2-0=restarting
+    restart dashd
+
 service ifaadaemon /system/bin/ifaadaemon
     class late_start
     user system
