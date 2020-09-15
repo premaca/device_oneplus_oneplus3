@@ -22,6 +22,7 @@
 #
 
 BUILD_BROKEN_USES_BUILD_COPY_HEADERS := true
+BUILD_BROKEN_PREBUILT_ELF_FILES := true
 
 PLATFORM_PATH := device/oneplus/oneplus3
 
